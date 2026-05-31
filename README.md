@@ -1,26 +1,24 @@
 # Systems Analytics Intelligence Lab
 
-Systems Analytics Intelligence Lab is an interactive learning application for business information systems, business analytics, decision modelling, and applied analytics labs. It combines structured lessons, visual concepts, case studies, glossary-style explanations, and simulation-style labs in one Vite React app.
+Interactive courseware for business information systems, business analytics, decision modelling, and applied analytics practice. The app is a self-contained Vite React site with structured lessons, visual explainers, case studies, glossary support, progress state, and simulation-style labs.
 
-The project is designed as a self-contained static web application, so it can be deployed directly to Netlify.
+## Features
 
-## What The App Includes
-
-- A splash homepage with the app title, logo, learning path entry point, applied labs entry point, and visual splash image.
-- A Learning Path organized around lessons, with modules used as section labels.
-- Lesson pages that combine core explanation, visual concepts, key concepts, business application, case study, glossary, and lesson navigation.
-- A visual-first lesson overview with two-column lesson cards and larger diagram previews.
-- Applied Labs for practicing information systems, analytics, data warehousing, OLAP, decision tables, decision trees, and dashboard logic.
-- A dark, enterprise-style interface with reusable cards, top navigation, responsive layouts, and embedded static assets.
+- Splash homepage with learning path and applied lab entry points.
+- Modular learning path covering business systems, information systems, BI, analytics, data warehousing, OLAP, and decision modelling.
+- Lesson pages with explanations, visual concepts, key concepts, business examples, case studies, glossary terms, checkpoints, and navigation.
+- Applied labs for ETL logic, data warehouses, OLAP thinking, dashboards, decision tables, decision trees, AHP-style decisions, and process analysis.
+- Responsive dark enterprise-style UI built with reusable React views, Lucide icons, Recharts visualizations, and static course images.
+- Static deployment model with no backend, database, or environment variables required.
 
 ## Tech Stack
 
 - React 18
 - TypeScript
-- Vite
+- Vite 5
 - Recharts
 - Lucide React
-- Static image assets from the `pictures/` directory
+- Netlify-ready static hosting
 
 ## Project Structure
 
@@ -48,7 +46,7 @@ The project is designed as a self-contained static web application, so it can be
 └── vite.config.ts
 ```
 
-## Local Development
+## Getting Started
 
 Install dependencies:
 
@@ -56,42 +54,70 @@ Install dependencies:
 npm install
 ```
 
-Start the development server:
+Start the local development server:
 
 ```bash
 npm run dev
 ```
 
-By default, Vite serves the app at:
+Vite serves the app at:
 
 ```text
 http://localhost:3000
 ```
 
-Create a production build:
+## Available Scripts
+
+```bash
+npm run dev
+```
+
+Runs the Vite development server.
 
 ```bash
 npm run build
 ```
 
-Preview the production build locally:
+Runs TypeScript checks and builds the production app into `dist/`.
 
 ```bash
 npm run preview
 ```
 
-## Netlify Deployment
+Serves the production build locally for review.
 
-This project includes a `netlify.toml` file, so Netlify can detect the correct build settings automatically.
+```bash
+npm run lint
+```
 
-Recommended Netlify settings:
+Runs ESLint across TypeScript and React source files.
+
+## Content Model
+
+Course content lives in `src/content/`:
+
+- `modules.ts` defines modules, lessons, explanations, checkpoints, learning outcomes, and lab relationships.
+- `cases.ts` defines case studies used by lesson and resource views.
+- `glossary.ts` defines glossary terms used throughout the learning experience.
+
+The main app composition lives in `src/app/App.tsx`. Styling and responsive behavior live in `src/app/index.css`. Lightweight progress and badge metadata live in `src/store/progressStore.ts`.
+
+## Visual Assets
+
+All app images are stored in `pictures/` and imported through Vite asset URLs in `src/app/App.tsx`.
+
+When replacing an image, keep the filename stable when possible. If a filename changes, update the corresponding entry in the `visualAssets` object in `src/app/App.tsx`.
+
+## Deployment
+
+The app is designed for static hosting. Netlify build settings are already defined in `netlify.toml`:
 
 ```text
 Build command: npm run build
 Publish directory: dist
 ```
 
-The app is a client-side React application. The redirect rule in `netlify.toml` sends all routes back to `index.html`, which keeps the app deploy-safe if navigation is expanded later.
+The redirect rule sends all routes to `index.html`, so client-side navigation remains deployment-safe.
 
 ### Deploy From Git
 
@@ -135,43 +161,8 @@ When prompted for the publish directory, use:
 dist
 ```
 
-## Content Model
-
-Course content lives in `src/content/`:
-
-- `modules.ts` defines the learning path, lesson structure, explanations, business applications, visual references, and checks.
-- `cases.ts` defines lesson case studies.
-- `glossary.ts` defines glossary terms used throughout the learning experience.
-
-The main app composition lives in `src/app/App.tsx`, while visual styling and responsive behavior live in `src/app/index.css`.
-
-## Visual Assets
-
-All app images are stored in `pictures/` and imported by `src/app/App.tsx` through Vite asset URLs. When replacing an image, keep the filename stable if possible. If the filename changes, update the corresponding entry in the `visualAssets` object in `src/app/App.tsx`.
-
-## Available Scripts
-
-```bash
-npm run dev
-```
-
-Runs the local development server.
-
-```bash
-npm run build
-```
-
-Runs TypeScript checks and builds the static production app into `dist/`.
-
-```bash
-npm run preview
-```
-
-Serves the production build locally for review.
-
-## Deployment Notes
+## Notes
 
 - `node_modules/` and `dist/` are intentionally ignored by Git.
 - Netlify installs dependencies from `package-lock.json`, runs `npm run build`, and publishes `dist/`.
-- The app does not require a backend, database, or environment variables.
-- Large image assets are bundled into the build. If deploy size or load time becomes a concern, optimize images in `pictures/`.
+- Large image assets are bundled into the production build. If deploy size or load time becomes a concern, optimize images in `pictures/`.

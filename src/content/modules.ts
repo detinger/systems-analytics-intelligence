@@ -125,17 +125,19 @@ export const courseModules: CourseModule[] = [
     id: "m2",
     number: 2,
     title: "Business Information Systems",
-    subtitle: "TPS, MIS, DSS, and Enterprise Resource Planning (ERP)",
-    description: "Explore the different systems supporting operational, tactical, and strategic management. Learn the role of ERP in aligning finance, HR, sales, and manufacturing.",
+    subtitle: "TPS, MIS, DSS, ERP, value chains, and business processes",
+    description: "Explore the different systems supporting operational, tactical, and strategic management. Learn how ERP, value chains, business functions, and cross-functional processes shape information system design.",
     difficulty: "Beginner",
-    estimatedTime: "50 mins",
+    estimatedTime: "70 mins",
     learningOutcomes: [
       "Distinguish between TPS, MIS, and DSS based on target users and decision types",
       "Explain the conceptual role and modules of Enterprise Resource Planning (ERP) systems",
       "Describe how communication and collaboration systems connect distinct organizational layers",
-      "Connect functional departments with specific information system modules"
+      "Connect functional departments with specific information system modules",
+      "Explain Porter's value chain and distinguish primary processes from support processes",
+      "Describe the relationship between business processes, business functions, and information systems"
     ],
-    keyConcepts: ["System Hierarchy (TPS/MIS/DSS)", "ERP Systems", "Functional Modules"],
+    keyConcepts: ["System Hierarchy (TPS/MIS/DSS)", "ERP Systems", "Functional Modules", "Porter's Value Chain", "Cross-Functional Business Processes"],
     quizId: "q2",
     lessons: [
       {
@@ -203,6 +205,43 @@ export const courseModules: CourseModule[] = [
           "Shared databases ensure high data consistency and real-time operations.",
           "Modern ERP (ERP II) extends integration to suppliers and customers."
         ]
+      },
+      {
+        id: "l2-3",
+        moduleId: "m2",
+        title: "Value Chain, Business Processes, and Information Systems",
+        bigQuestion: "How do business processes connect business functions, value creation, and information systems?",
+        explanation: "Porter's value chain explains how an organization creates value by linking activities that move from inputs to customer value. The model separates activities into two groups:\n1. **Primary processes**: Activities directly involved in creating, selling, delivering, and servicing a product or service, such as inbound logistics, operations, outbound logistics, marketing and sales, and customer service.\n2. **Support processes**: Activities that enable the primary processes to work well, such as procurement, human resources, technology development, administration, and collaboration infrastructure.\nA **business function** is a specialized area of responsibility, such as Sales, Manufacturing, Finance, Logistics, HR, or Marketing. A **business process** is a flow of work that often crosses several functions to produce a result for a customer. For example, an order-to-cash process can begin in Sales, require configuration in Manufacturing, trigger credit checking in Finance, require Delivery from Logistics, and end with Billing and Collections.\nInformation systems are designed around these relationships. A TPS records operational events inside each process step, ERP integrates process data across functions, MIS summarizes performance for managers, DSS helps evaluate alternatives, and collaboration systems coordinate people across departments and partner organizations. In a process-oriented view, technology is not just a departmental tool; it becomes the connective layer that makes cross-functional work visible, consistent, and controllable.",
+        keyConcepts: [
+          "Porter's Value Chain: A framework for analyzing how primary and support activities create competitive advantage.",
+          "Primary Processes: Customer-facing value creation activities such as operations, logistics, sales, and service.",
+          "Support Processes: Enabling activities such as HR, procurement, administration, and technology development.",
+          "Business Function: A specialized department or capability responsible for a domain of work.",
+          "Cross-Functional Process: An end-to-end workflow that passes through multiple business functions and information systems."
+        ],
+        example: "A customer order starts as a proposal in Sales, becomes a configuration task in Manufacturing, passes through credit checking in Finance, moves to Delivery in Logistics, and ends with Billing and Collections. Each function owns part of the work, but the customer experiences it as one process. An ERP system connects the shared data, while workflow and collaboration systems coordinate approvals, documents, responsibilities, and handoffs.",
+        checkpoint: {
+          question: "What is the main difference between a business function and a business process?",
+          options: [
+            "A business function is a department or capability, while a business process is an end-to-end flow of work that may cross several functions",
+            "A business process only belongs to Finance, while a business function belongs to every department",
+            "A business function is always automated, while a business process is always manual",
+            "A business process describes job titles, while a business function describes software modules only"
+          ],
+          correctAnswer: "A business function is a department or capability, while a business process is an end-to-end flow of work that may cross several functions",
+          explanation: "Functions group specialized responsibilities, while processes describe how work flows across those responsibilities to create value for a customer or stakeholder."
+        },
+        commonMistakes: [
+          "Confusing a department with a process. Sales can be a function, but order-to-cash is a process crossing Sales, Finance, Logistics, and other functions.",
+          "Treating information systems as isolated departmental tools instead of shared infrastructure for end-to-end processes.",
+          "Ignoring support processes. HR, procurement, administration, and technology development may not directly sell the product, but they strongly shape performance and competitive advantage."
+        ],
+        summary: [
+          "Porter's value chain separates primary value-creating activities from support activities.",
+          "Business functions specialize work, while business processes connect work across functions.",
+          "Information systems capture, integrate, coordinate, and analyze process activity across the organization.",
+          "ERP, workflow, collaboration, MIS, and DSS tools become more valuable when they support complete business processes instead of isolated departments."
+        ]
       }
     ],
     relatedLab: "olap"
@@ -221,9 +260,9 @@ export const courseModules: CourseModule[] = [
       "Understand how BI differs from deep Data Science and predictive methods",
       "List typical deliverables for analysts, BI developers, and data scientists",
       "Distinguish between descriptive, diagnostic, predictive, and prescriptive analytics",
-      "Explain the fundamental logic of NoSQL databases and the MapReduce programming framework"
+      "Explain how different database representation models organize data for different analytical and operational needs"
     ],
-    keyConcepts: ["Analysis vs. Analytics", "BI Subsets", "BI vs. Data Science", "Analytics Maturity Spectrum", "Big Data"],
+    keyConcepts: ["Analysis vs. Analytics", "BI Subsets", "BI vs. Data Science", "Analytics Maturity Spectrum", "Database Data Representations"],
     quizId: "q3",
     lessons: [
       {
@@ -544,51 +583,56 @@ export const courseModules: CourseModule[] = [
   {
     id: "m9",
     number: 9,
-    title: "AHP Decision Lab",
-    subtitle: "Analytic Hierarchy Process theory and multi-criteria comparison",
-    description: "Understand the mathematical and psychological foundations of the Analytic Hierarchy Process (AHP). Learn Saaty's scale and consistency check principles.",
+    title: "Decision Model Categories",
+    subtitle: "Optimization, simulation, heuristics, predictive models, rules, and AHP",
+    description: "Compare major decision model categories and learn when to use optimization, simulation, heuristics, predictive models, rule-based models, and AHP-style multi-criteria methods.",
     difficulty: "Advanced",
     estimatedTime: "40 mins",
     learningOutcomes: [
-      "Explain the conceptual steps of the Analytic Hierarchy Process",
-      "Describe Saaty's 1-9 pairwise comparison scale and its verbal meanings",
-      "Understand the calculation of local and global weights in AHP hierarchies",
-      "Explain Consistency Index (CI) and Consistency Ratio (CR) thresholds"
+      "Distinguish optimization, simulation, heuristic, predictive, rule-based, and multi-criteria decision models",
+      "Select an appropriate model category based on uncertainty, constraints, data availability, and decision frequency",
+      "Explain how AHP fits within multi-criteria decision modelling",
+      "Recognize why different decision problems require different modelling approaches"
     ],
-    keyConcepts: ["AHP Hierarchy Structure", "Saaty Scale Pairwise Comparison", "Consistency Indexes (CI, CR)"],
+    keyConcepts: ["Optimization Models", "Simulation Models", "Heuristics", "Predictive Models", "Rule-Based Models", "AHP and Multi-Criteria Models"],
     quizId: "q9",
     lessons: [
       {
         id: "l9-1",
         moduleId: "m9",
-        title: "AHP Theory & Multi-Criteria Decisions",
-        bigQuestion: "Why is AHP considered both a mathematical and psychological decision method?",
-        explanation: "The **Analytic Hierarchy Process (AHP)**, developed by Thomas Saaty in the 1970s, is a multi-criteria decision-making method that combines math and psychology. It helps groups resolve complex choices by breaking them down into a three-level hierarchy:\n1. **Goal**: The final choice to be made (e.g., choosing a cloud provider).\n2. **Criteria**: The factors affecting the choice (e.g., price, availability, performance).\n3. **Alternatives**: The actual options to select from (e.g., Amazon, Azure, Google).\nInstead of asking judges to assign raw weights, AHP uses **Pairwise Comparisons**. Decision-makers compare options two at a time using Saaty's 1–9 scale, expressing their preferences verbally (e.g., 'Establishment is moderately more important than Availability zones'). The system then calculates weights and checks for consistency, ensuring logical decision-making.",
+        title: "Decision Model Categories",
+        bigQuestion: "How do we choose the right type of model for a decision problem?",
+        explanation: "Decision modelling is not one method. Different problems need different model categories depending on what is known, what is uncertain, how often the decision repeats, and whether the goal is to choose, predict, optimize, simulate, or automate.\n1. **Optimization models**: Search for the best feasible solution under constraints, such as minimizing cost, maximizing profit, or assigning resources efficiently.\n2. **Simulation models**: Imitate how a system behaves over time, especially when uncertainty, randomness, queues, delays, or complex interactions make exact calculation difficult.\n3. **Heuristics**: Use practical rules of thumb to find a good enough solution quickly when the perfect solution is too expensive, slow, or complex to compute.\n4. **Predictive models**: Estimate what is likely to happen using historical data, such as demand forecasts, churn risk, default probability, or failure prediction.\n5. **Rule-based models**: Encode explicit business logic as rules, decision tables, or decision trees for repeatable operational decisions.\n6. **Multi-criteria models such as AHP**: Compare alternatives across several criteria when stakeholder preferences matter. AHP is especially useful when criteria must be weighted through pairwise comparisons and checked for consistency.\nThe main skill is matching model type to decision type. A delivery routing problem may need optimization, a call-center staffing problem may need simulation, a fraud-screening process may need predictive scoring plus rules, and a vendor selection problem may need AHP or another multi-criteria model.",
         keyConcepts: [
-          "Goal, Criteria, and Alternatives: The standard three-level AHP hierarchy.",
-          "Pairwise Comparison: Comparing two options at a time to reduce bias.",
-          "Saaty Scale: A scale from 1 (equal importance) to 9 (extreme importance) used in comparisons."
+          "Optimization: Finds the best feasible choice under objectives and constraints.",
+          "Simulation: Tests how a system may behave under uncertainty or changing conditions.",
+          "Heuristics: Uses practical rules to reach useful solutions when exact methods are too costly.",
+          "Predictive Models: Estimate future outcomes using historical patterns.",
+          "Rule-Based Models: Automate repeatable decisions using explicit logic.",
+          "AHP and Multi-Criteria Models: Compare alternatives across weighted criteria and stakeholder preferences."
         ],
-        example: "A company choosing a new software vendor uses AHP. The directors compare cost vs. security, security vs. ease-of-use, and ease-of-use vs. cost in pairs, letting the AHP model calculate logical weights and select the optimal vendor.",
+        example: "A logistics company may use optimization to assign delivery routes, simulation to test warehouse congestion during holiday demand, predictive models to forecast late shipments, rule-based models to trigger escalation rules, heuristics to make fast dispatch choices during disruptions, and AHP to select a long-term fleet technology when cost, sustainability, reliability, and risk all matter.",
         checkpoint: {
-          question: "According to Saaty's AHP scale, what does an intensity score of 1 represent?",
+          question: "Which model category is most appropriate when the goal is to find the best feasible solution while respecting constraints?",
           options: [
-            "Extreme preference",
-            "Moderate preference",
-            "Equal importance / contribution to the goal",
-            "A logical conflict error"
+            "Optimization model",
+            "Document database model",
+            "Simple descriptive report",
+            "Unstructured interview"
           ],
-          correctAnswer: "Equal importance / contribution to the goal",
-          explanation: "In AHP, a score of 1 represents equal importance, where both elements contribute equally to the goal."
+          correctAnswer: "Optimization model",
+          explanation: "Optimization models search for the best feasible solution under defined objectives and constraints, such as cost, capacity, time, or resource limits."
         },
         commonMistakes: [
-          "Making completely contradictory comparisons (e.g., A > B, B > C, and C > A), resulting in an inconsistent model.",
-          "Failing to structure a clear hierarchy before running pairwise comparisons."
+          "Using one favorite modelling technique for every decision problem, even when the problem structure calls for a different approach.",
+          "Confusing predictive models with prescriptive models. Prediction estimates what may happen; prescriptive modelling recommends what to do.",
+          "Treating AHP as the only decision model instead of one useful multi-criteria method among several model categories."
         ],
         summary: [
-          "AHP combines math and psychology to structure complex multi-criteria decisions.",
-          "Pairwise comparisons simplify judgments and reduce bias.",
-          "Calculating the consistency ratio (CR) ensures comparisons are logically sound."
+          "Decision model categories include optimization, simulation, heuristics, predictive models, rule-based models, and multi-criteria methods such as AHP.",
+          "The right model depends on uncertainty, constraints, data availability, decision frequency, and stakeholder preferences.",
+          "AHP is useful for weighted multi-criteria choices, but it is not the only type of decision model.",
+          "Good decision modelling begins by diagnosing the decision problem before selecting a method."
         ]
       }
     ],

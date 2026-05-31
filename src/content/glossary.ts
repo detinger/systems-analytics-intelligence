@@ -13,6 +13,24 @@ export const glossaryData: GlossaryTerm[] = [
     category: "Business Systems"
   },
   {
+    term: "Value Chain",
+    croatian: "Lanac vrijednosti",
+    definition: "A framework for analyzing the linked primary and support activities an organization performs to create value and competitive advantage.",
+    category: "Business Systems"
+  },
+  {
+    term: "Business Function",
+    croatian: "Poslovna funkcija",
+    definition: "A specialized organizational area or capability, such as sales, finance, logistics, production, HR, or marketing, responsible for a domain of work.",
+    category: "Business Systems"
+  },
+  {
+    term: "Workflow",
+    croatian: "Tijek rada",
+    definition: "The ordered movement of tasks, information, approvals, and responsibilities through people, departments, systems, or partner organizations.",
+    category: "Business Systems"
+  },
+  {
     term: "Transaction Processing System (TPS)",
     croatian: "Sustav za obradu transakcija",
     definition: "An information system that captures and records the routine daily transactions necessary to conduct business (e.g., sales orders, inventory, payroll).",
@@ -64,6 +82,12 @@ export const glossaryData: GlossaryTerm[] = [
     term: "Dashboard",
     croatian: "Elektronička poslovna kontrolna ploča",
     definition: "A visual interface that displays key business metrics and KPIs on a single screen in a clean, graphic layout, allowing managers to monitor organizational performance at a glance.",
+    category: "Analytics & BI"
+  },
+  {
+    term: "Database Data Representation",
+    croatian: "Prikaz podataka u bazi podataka",
+    definition: "The structural model a database uses to organize data, such as key-value pairs, documents, column families, graphs, or relational tables.",
     category: "Analytics & BI"
   },
   {

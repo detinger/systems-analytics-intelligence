@@ -12,7 +12,7 @@
   --bg-surface: #142438;
   --bg-card: rgba(20, 36, 56, 0.92);
   --bg-elevated: #1B3048;
-  --image-bg: #F8FAFC;
+  --image-bg: #FFFFFF;
   
   --border-light: rgba(164, 181, 204, 0.28);
   --border-glass: rgba(164, 181, 204, 0.3);
@@ -1019,6 +1019,13 @@ body::before {
   margin-top: 4px;
 }
 
+.module-visual-strip .visual-explanation {
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-light);
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
 .module-case {
   background: var(--bg-base);
   border: 1px solid var(--border-light);
@@ -1290,14 +1297,32 @@ body::before {
   overflow: hidden;
 }
 
+.lesson-visual-image-frame {
+  display: flex;
+  justify-content: center;
+  background: var(--image-bg);
+  border-top: 1px solid var(--border-light);
+  padding: 18px;
+}
+
 .lesson-visual-grid img {
   width: 100%;
+  max-width: 70%;
   height: auto;
   max-height: none;
   object-fit: contain;
-  background: var(--image-bg);
-  border-top: 1px solid var(--border-light);
-  padding: 14px;
+}
+
+.lesson-visual-image-frame.compact-visual img {
+  max-width: 50%;
+}
+
+.lesson-visual-image-frame.medium-visual img {
+  max-width: 60%;
+}
+
+.lesson-visual-image-frame.large-visual img {
+  max-width: 80%;
 }
 
 .lesson-visual-grid div {
@@ -1314,6 +1339,15 @@ body::before {
   font-size: 0.88rem;
   line-height: 1.55;
   margin-top: 8px;
+}
+
+.lesson-visual-grid .visual-explanation {
+  color: var(--text-primary);
+  background: rgba(47, 156, 255, 0.055);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-top: 12px;
 }
 
 .glass-card::before {
@@ -1577,7 +1611,19 @@ body::before {
   }
 
   .lesson-visual-grid img {
-    border-top: 1px solid var(--border-light);
+    max-width: 88%;
+  }
+
+  .lesson-visual-image-frame.compact-visual img {
+    max-width: 68%;
+  }
+
+  .lesson-visual-image-frame.medium-visual img {
+    max-width: 78%;
+  }
+
+  .lesson-visual-image-frame.large-visual img {
+    max-width: 96%;
   }
 
   .home-splash {
@@ -1779,6 +1825,7 @@ body::before {
   grid-template-columns: 350px 1fr;
   gap: 24px;
   align-items: start;
+  min-width: 0;
 }
 
 .lab-sidebar {
@@ -1790,6 +1837,7 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
 }
 
 .lab-canvas {
@@ -1803,6 +1851,26 @@ body::before {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+@media (max-width: 1100px) {
+  .lab-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .lab-layout {
+    gap: 16px;
+  }
+
+  .lab-sidebar,
+  .lab-canvas {
+    padding: 16px;
+    width: 100%;
+  }
 }
 
 /* ETL Simulator Pipeline visual */

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { 
   BookOpen, 
   Sliders, 
@@ -102,6 +102,11 @@ const visualAssets = {
   decisionRequirements: new URL('../../pictures/decision_requirements_diagram.png', import.meta.url).href,
   dmPaBa: new URL('../../pictures/DM-PA-BA.png', import.meta.url).href,
   decisionModels: new URL('../../pictures/PA-models.png', import.meta.url).href,
+  ahpHierarchy: new URL('../../pictures/AHP.png', import.meta.url).href,
+  processValueChain: new URL('../../pictures/process1.png', import.meta.url).href,
+  processFunctions: new URL('../../pictures/process2.png', import.meta.url).href,
+  processSwimlane: new URL('../../pictures/process3.png', import.meta.url).href,
+  processPartnerships: new URL('../../pictures/process4.png', import.meta.url).href,
 };
 
 const sourceVisualConcepts = [
@@ -115,6 +120,10 @@ const sourceVisualConcepts = [
   { title: "Decision-Making Process", category: "Business Information Systems", image: visualAssets.decisionMakingProcess, concepts: "Intelligence, design, choice, implementation, and feedback." },
   { title: "Management Information Systems", category: "Business Information Systems", image: visualAssets.mis, concepts: "Routine reports, managerial summaries, control information, internal performance." },
   { title: "ERP", category: "Business Information Systems", image: visualAssets.erp, concepts: "Integrated modules, shared database, enterprise process coordination." },
+  { title: "Porter's Value Chain", category: "Business Information Systems", image: visualAssets.processValueChain, concepts: "Primary and support processes combine to create competitive advantage." },
+  { title: "Business Processes and Functions", category: "Business Information Systems", image: visualAssets.processFunctions, concepts: "End-to-end processes cross specialized functions such as sales, manufacturing, finance, and logistics." },
+  { title: "Cross-Functional Process Flow", category: "Business Information Systems", image: visualAssets.processSwimlane, concepts: "Swimlane workflows show how responsibility passes between customers and departments." },
+  { title: "Information Partnerships", category: "Business Information Systems", image: visualAssets.processPartnerships, concepts: "Collaboration, workflow, content, and knowledge systems connect internal functions with partner organizations." },
   { title: "Taxonomy of Data", category: "Analytics and BI", image: visualAssets.taxonomyData, concepts: "Data classes, source types, structured and unstructured data." },
   { title: "Business Analysis Knowledge Areas", category: "Analytics and BI", image: visualAssets.baKnowledgeAreas, concepts: "Requirements, stakeholders, strategy, solution evaluation, change support." },
   { title: "Business Analysis vs Business Analytics", category: "Analytics and BI", image: visualAssets.analysisVsAnalytics, concepts: "Process-change discipline versus quantitative data modelling discipline." },
@@ -126,16 +135,55 @@ const sourceVisualConcepts = [
   { title: "Business Analyst Skills", category: "Analytics and BI", image: visualAssets.baSkills, concepts: "Analytical, communication, domain, technical, and stakeholder skills." },
   { title: "OLAP Cube Slicing", category: "Analytics and BI", image: visualAssets.olapCube, concepts: "Multidimensional analysis, slice, dice, pivot, drill-down." },
   { title: "BI vs Data Science", category: "Analytics and BI", image: visualAssets.biVsDataScience, concepts: "Operational reporting and monitoring versus advanced modelling and experimentation." },
-  { title: "NoSQL", category: "Analytics and BI", image: visualAssets.nosql, concepts: "Non-relational data stores, scale, flexibility, document/key-value/graph models." },
+  { title: "Database Data Representations", category: "Analytics and BI", image: visualAssets.nosql, concepts: "Different ways databases represent data: key-value, graph, column-family, and document models." },
   { title: "ETL Process", category: "Analytics and BI", image: visualAssets.etlPipeline, concepts: "Extract, clean, transform, load, and prepare warehouse-ready data." },
   { title: "Analytics Spectrum", category: "Decision Modelling", image: visualAssets.analyticsSpectrum, concepts: "Descriptive, diagnostic, predictive, and prescriptive analytics." },
   { title: "Analytics Maturity Spectrum", category: "Decision Modelling", image: visualAssets.analyticsMaturity, concepts: "Business value and difficulty as analytics moves toward optimization." },
   { title: "Decision Modelling in PA and BA", category: "Decision Modelling", image: visualAssets.dmPaBa, concepts: "Prescriptive analytics, decision modelling, and business analytics relationship." },
   { title: "Decision Model Categories", category: "Decision Modelling", image: visualAssets.decisionModels, concepts: "Optimization, simulation, heuristics, predictive and rule-based models." },
+  { title: "AHP Decision Hierarchy", category: "Decision Modelling", image: visualAssets.ahpHierarchy, concepts: "Goal, criteria, and alternatives arranged as a multi-criteria decision hierarchy." },
   { title: "Decision Table", category: "Decision Modelling", image: visualAssets.decisionTable, concepts: "Conditions, actions, business rules, completeness and consistency." },
   { title: "Decision Tree", category: "Decision Modelling", image: visualAssets.decisionTree, concepts: "Decision nodes, chance nodes, outcomes, payoff comparison." },
   { title: "Decision Requirements Diagram", category: "Decision Modelling", image: visualAssets.decisionRequirements, concepts: "Decision dependencies, input data, knowledge sources, DMN-style structure." },
 ];
+
+const visualExplanations: Record<string, string> = {
+  "Business System": "Read this diagram as a simple model of how an organization survives in its environment. Inputs such as people, capital, materials, data, and technology enter the business; internal processes transform those inputs; outputs such as products, services, reports, and customer value leave the system. The most important part is feedback: results from the output side return to management as signals about quality, cost, demand, delays, or errors. A business becomes adaptive when managers use that feedback to change resources, rules, workflows, or goals instead of repeating the same process regardless of what is happening outside.",
+  "Business System Flows": "This diagram is useful because it separates flows that are often mixed together in everyday language. Material flow is the physical movement of goods, documents, equipment, or people. Data flow is the capture of raw events, such as a scan, order, payment, or status update. Information flow is what happens after data is organized into reports, dashboards, alerts, or instructions that people can interpret. Management control flow moves in the opposite direction: managers use information to send decisions, plans, approvals, and corrections back into operations. If a process fails, the diagram helps you ask which flow broke.",
+  "Information System Structure": "The structure shows why one organization needs several kinds of information systems rather than one universal tool. At the operational level, systems must be fast, detailed, and reliable because they record daily transactions. At the managerial level, systems summarize those transactions so supervisors can monitor performance, compare actual results with plans, and detect exceptions. At the strategic level, systems support broader questions about markets, investments, risk, and long-term direction. The higher you move, the less routine the decision becomes and the more aggregation, interpretation, and judgement are needed.",
+  "Strategic, Managerial, and Operational Levels": "This visual connects people, decisions, time horizons, and information needs. Operational users focus on immediate work, so they need current, detailed, accurate records. Middle managers coordinate resources and performance over weeks or months, so they need summaries, trends, and exception reports. Strategic leaders make long-range and uncertain decisions, so they need external data, forecasts, scenarios, and high-level indicators. The same business event can serve all three levels, but it must be transformed from raw transaction detail into information that matches each decision context.",
+  "Information System Challenges": "The diagram reminds us that information-system projects fail for reasons beyond programming. A system may be technically functional but still weak if users do not adopt it, departments refuse to share data, legacy systems cannot integrate, security rules are unclear, or data quality is poor. Organizational change is often the hardest part: new systems change responsibilities, decision rights, routines, and performance visibility. A good implementation therefore needs process redesign, training, governance, stakeholder alignment, and technical architecture working together.",
+  "Decision Support Systems": "This visual presents a DSS as a decision environment, not just a report. Data provides facts about the situation, models represent relationships and assumptions, and the user explores alternatives through questions such as what if, how much, under which constraints, and with what risk. A DSS is especially valuable when decisions are semi-structured: part of the problem can be calculated, but judgement is still needed. The diagram also shows why model quality matters. If the model or input data is weak, the system can produce confident but misleading recommendations.",
+  "Decision Types": "The diagram classifies decisions by how clearly the rules and outcomes are known. Structured decisions are repetitive and rule-based, such as calculating reorder points or applying eligibility rules. Semi-structured decisions have some analyzable parts but still require human interpretation, such as choosing a supplier under uncertain demand. Unstructured decisions are novel, ambiguous, and strategic, such as entering a new market. This classification matters because it tells us what kind of information system is appropriate: automation for structured decisions, DSS for semi-structured decisions, and broad analytical support for unstructured decisions.",
+  "Decision-Making Process": "The diagram turns decision making into a sequence rather than a single click. In the intelligence phase, the organization discovers and defines the problem. In design, it develops alternatives, models, criteria, and assumptions. In choice, it compares alternatives and selects an option. In implementation, the decision is translated into action, budgets, responsibilities, and system changes. Feedback closes the loop by checking whether the chosen action worked. This is important because many poor decisions fail not at selection, but at problem definition or implementation.",
+  "Management Information Systems": "This image positions MIS as the managerial reporting layer built on top of operational data. Transaction systems record detailed events, but managers need those events aggregated into meaningful indicators such as sales by region, stock exceptions, productivity, waiting time, or budget variance. MIS usually supports routine monitoring rather than open-ended discovery. The visual helps students see why MIS reports must be timely, consistent, and aligned with management responsibility: each report should help someone plan, control, or correct an area of the business.",
+  "ERP": "The ERP diagram shows integration across functions through common modules and a shared database. In a fragmented company, Sales, Finance, Production, HR, and Logistics may each store their own copy of customer, order, employee, or inventory data. ERP reduces this duplication by making one business event update all affected areas. For example, a confirmed sales order can reserve inventory, trigger production planning, update revenue expectations, and prepare invoicing. The key idea is not simply software size; it is process integration and data consistency across the enterprise.",
+  "Porter's Value Chain": "The diagram separates primary business processes from support processes and points them toward competitive advantage. Primary processes form the value-creating path that customers experience most directly: inbound logistics bring resources in, operations transform them, outbound logistics deliver them, marketing and sales create demand, and customer service sustains value after the sale. Support processes sit above this chain because they enable every primary activity: administration coordinates the organization, HR provides people, technology development improves methods, procurement supplies resources, and intranets, extranets, and portals connect work digitally. The arrow means advantage comes from how well all activities fit together, not from one isolated department.",
+  "Business Processes and Functions": "This picture shows why process thinking is different from department thinking. The horizontal chain is the business process: proposal, commitment, configuration, credit checking, delivery, billing, and collections. The boxes underneath are business functions such as Sales, Manufacturing, Finance, and Logistics. A function owns specialized knowledge, but a process crosses several functions to deliver a complete result to the customer. The connecting lines are the handoffs where delays, duplicate data entry, unclear responsibility, and system gaps often appear. Information systems add value when they make these handoffs visible and coordinated.",
+  "Cross-Functional Process Flow": "This swimlane diagram makes responsibility visible. Each horizontal lane represents an actor or department, and each process step appears in the lane responsible for doing it. The flow starts with the customer, passes to Department 1 to receive demand, moves to Department 2 for quotation, shifts to Department 3 to close the contract, then returns to Department 1 to deliver the product and complete the process. The lesson is that the customer sees one process, but the organization performs it through multiple handoffs. Swimlanes help analysts locate bottlenecks, missing approvals, duplicated tasks, and weak system support.",
+  "Information Partnerships": "The triangle shows that modern information systems extend beyond internal departments. Accounting, distribution, production, and marketing need to coordinate inside Organization #1, but the organization also exchanges information with partners, suppliers, customers, and other organizations. Collaboration systems sit in the center because they manage shared documents, workflow, knowledge, communication, and content. The picture helps explain why groupware, content management, knowledge management, and workflow tools are strategic: they reduce coordination friction across functional and organizational boundaries.",
+  "Taxonomy of Data": "The taxonomy shows that data differs by structure, source, format, and business use. Structured data fits neatly into tables, such as orders, products, payments, and inventory records. Semi-structured data has tags or flexible fields, such as JSON, XML, or logs. Unstructured data includes text, images, audio, video, and documents. The source also matters: internal operational data is usually easier to govern, while external data may be noisier but strategically valuable. This classification matters because storage, cleaning, integration, privacy control, and analytical methods differ for each data type.",
+  "Business Analysis Knowledge Areas": "This diagram expands business analysis beyond writing requirements. It shows that analysts help define strategy, understand stakeholders, elicit needs, analyze requirements, evaluate solutions, and support change. Each area answers a different question: Why change? Who is affected? What is needed? How should the solution behave? Did it create value? The diagram is useful because it places business analysts between business goals and solution delivery. Their work connects processes, rules, information systems, people, and measurable outcomes.",
+  "Business Analysis vs Business Analytics": "The comparison shows two related but different disciplines. Business analysis is about understanding organizational needs, processes, stakeholders, requirements, and solutions. It asks what should change and how the business should work. Business analytics is about using data, statistics, models, and quantitative methods to explain patterns or support decisions. It asks what the data reveals and what might happen next. Many projects need both: business analysis defines the problem and process context, while analytics provides evidence, patterns, forecasts, or optimization support.",
+  "Analytics Evolution": "The evolution diagram shows how organizations typically move from simple reporting toward more advanced analytical capability. Early stages focus on collecting data and describing past performance. As data quality, tooling, and skills improve, organizations begin diagnosing causes, forecasting future outcomes, and recommending actions. The important point is that advanced analytics depends on earlier foundations: reliable data, shared definitions, integrated systems, and business trust. An organization cannot jump straight to predictive or prescriptive analytics if basic reporting is inconsistent.",
+  "Business Analytics": "This diagram organizes business analytics around increasingly advanced business questions. Descriptive analytics answers what happened by summarizing historical data. Diagnostic analytics asks why it happened by drilling into causes, relationships, and exceptions. Predictive analytics asks what is likely to happen using statistical or machine learning models. Prescriptive analytics asks what should be done by combining predictions with constraints, objectives, and optimization. The diagram helps students see analytics as a progression from awareness to explanation to anticipation to action.",
+  "Data Warehouse Framework": "The framework shows the path from operational systems to analytical decision support. Source systems contain transactional data from daily work, but that data is often fragmented, inconsistent, and optimized for recording rather than analysis. ETL or ELT processes extract, clean, transform, and integrate that data into a warehouse. From there, data marts, OLAP structures, reports, dashboards, and analytical tools serve business users. The key idea is separation of concerns: operational systems run the business, while the warehouse supports analysis without disrupting daily operations.",
+  "BI Architecture": "The BI architecture diagram shows that user-facing dashboards are only the visible top of a larger stack. Underneath are data sources, integration processes, staging areas, warehouses, semantic layers, cubes or models, security, and presentation tools. Each layer has a role: sources record activity, integration standardizes it, storage preserves history, models define business meaning, and front-end tools make insight accessible. If a dashboard is wrong, the problem may be anywhere in the pipeline, so analysts need to understand the whole architecture.",
+  "Data Concept": "This visual distinguishes raw data from information and knowledge. A value by itself, such as 42 or 2026-05-31, has limited meaning until it is placed in context. When data is structured, labeled, compared, aggregated, or interpreted, it becomes information. When people use that information with experience, goals, and judgement, it supports knowledge and decisions. The diagram is a reminder that information systems do not create insight merely by storing data; they must preserve meaning, context, quality, and relevance.",
+  "Business Analyst Skills": "The skills diagram shows that business analysts need a hybrid profile. They must communicate with stakeholders, understand business domains, analyze processes, model requirements, reason about data, and work with technical teams. Soft skills matter because analysts must elicit needs, resolve ambiguity, and build agreement. Technical literacy matters because proposed solutions often become information systems. Analytical thinking matters because analysts must separate symptoms from root causes. The diagram makes the role look less like note-taking and more like structured problem solving.",
+  "OLAP Cube Slicing": "The cube illustrates multidimensional thinking. A measure such as sales revenue, units sold, or profit can be analyzed across dimensions such as time, product, region, customer segment, or channel. Slice means filtering to one value of a dimension, such as only Q1. Dice means filtering multiple dimensions, such as Q1 and laptops in one region. Pivot rotates the view, while drill-down moves from summary to detail and drill-up aggregates back upward. The cube matters because it lets managers explore data interactively without writing a new query for every question.",
+  "BI vs Data Science": "The visual compares two ways of extracting value from data. BI focuses on known metrics, historical monitoring, dashboards, reports, and business performance management. It is usually close to operational and managerial control. Data science is more exploratory and model-driven: it may use experiments, prediction, classification, clustering, recommendation, or anomaly detection to discover patterns and estimate future outcomes. The diagram is not saying one is better. It shows that BI helps organizations understand and monitor the business, while data science helps investigate uncertainty and build predictive capabilities.",
+  "Database Data Representations": "This diagram compares four ways a database can represent and organize data. A key-value model stores each item under a unique key, which is useful for fast lookup when the application already knows what it wants to retrieve. A graph database represents data as nodes and relationships, making it suitable for networks such as customers, products, suppliers, social links, recommendations, or fraud connections. A column-family model stores data by columns or column groups, which can be efficient for very large, sparse, distributed datasets. A document model stores richer records as flexible documents, often matching real business objects such as orders, profiles, invoices, or product descriptions. The main lesson is that database design depends on how business data is shaped, queried, related, and updated.",
+  "ETL Process": "The ETL diagram follows data from source systems into a trusted analytical store. Extraction reads data from operational databases, files, APIs, or external sources. Transformation cleans errors, standardizes formats, resolves duplicates, maps codes, checks business rules, and prepares dimensions and facts. Loading writes the prepared data into the warehouse or data mart. The diagram is important because most analytical quality is created before users open a dashboard. If ETL is weak, reports may look polished while hiding inconsistent or unreliable data.",
+  "Analytics Spectrum": "The spectrum places analytics types in order of increasing analytical ambition. Descriptive analytics reports what happened. Diagnostic analytics investigates causes. Predictive analytics estimates future outcomes. Prescriptive analytics recommends or automates actions based on objectives, constraints, and predicted consequences. As the spectrum advances, business value may increase because decisions become more proactive, but difficulty also rises because the organization needs better data, stronger models, clearer governance, and more trust in analytical outputs.",
+  "Analytics Maturity Spectrum": "The maturity spectrum shows analytics as an organizational capability, not merely a set of tools. At low maturity, teams often rely on manual reports, inconsistent definitions, and reactive decisions. As maturity grows, data becomes integrated, metrics are standardized, dashboards become trusted, and analysts can diagnose causes. Higher maturity adds forecasting, optimization, simulation, and automated recommendations. The diagram helps explain why culture, skills, data governance, and business adoption are just as important as algorithms.",
+  "Decision Modelling in PA and BA": "This visual connects decision modelling to prescriptive analytics and business analytics. Descriptive and predictive analysis can tell managers what happened or what might happen, but decision modelling asks what action should be chosen. It requires alternatives, objectives, constraints, criteria, assumptions, and sometimes uncertainty. In prescriptive analytics, models can recommend a course of action, such as an optimal schedule, portfolio, route, or policy. The diagram shows that decision models turn insight into structured choice.",
+  "Decision Model Categories": "The category diagram shows that not all decision models solve the same kind of problem. Optimization models search for the best feasible solution under constraints. Simulation models explore how a system may behave under uncertainty. Heuristics provide practical rules when exact optimization is too costly. Predictive models estimate likely outcomes. Rule-based models encode business logic explicitly. The correct model depends on whether the problem is about choosing, forecasting, experimenting, automating, or managing uncertainty.",
+  "AHP Decision Hierarchy": "This diagram shows how AHP structures a multi-criteria decision before any calculation happens. The top level is the goal, such as choosing the optimal option. The middle level contains criteria that express what matters for the decision, such as cost, reliability, usability, security, or strategic fit. The bottom level contains alternatives competing for selection. The arrows show that each alternative is evaluated through each criterion, and the criteria themselves are weighted according to their importance to the goal. In Lesson 13, AHP is one example of a multi-criteria decision model: it is useful when stakeholder preferences must be made explicit and checked for consistency.",
+  "Decision Table": "The decision table visual turns business policy into a structured set of rules. Conditions describe the inputs that matter, such as customer type, risk level, amount, or status. Actions describe the decision outcome, such as approve, reject, escalate, discount, or inspect. Each row represents one rule combination. The power of the table is auditability: analysts can check whether every possible case is covered, whether two rules conflict, and whether overlapping conditions produce inconsistent outcomes. This makes decision logic easier to communicate and automate.",
+  "Decision Tree": "The decision tree represents a decision as a branching structure of choices, uncertain events, and outcomes. Decision nodes show where the decision maker chooses an alternative. Chance nodes show events outside full control, such as market response, demand level, or system failure. Terminal nodes show consequences, costs, payoffs, or utilities. By attaching probabilities and values, the tree can support expected-value comparison. Even without calculations, it helps clarify assumptions and reveal hidden paths that people may overlook in a verbal discussion.",
+  "Decision Requirements Diagram": "The DRD shows what a decision depends on before it can be made. A decision may require input data, business knowledge, supporting sub-decisions, and external knowledge sources such as policy, regulation, or expert judgement. The diagram is useful because it separates the question being decided from the information and rules needed to answer it. In system design, this helps analysts identify missing data, unclear ownership, reusable decisions, and business rules that should be documented before automation."
+};
 
 const moduleResourceMap: Record<string, { visualTitles: string[]; caseIds: string[]; glossaryTerms: string[] }> = {
   m1: {
@@ -144,14 +192,14 @@ const moduleResourceMap: Record<string, { visualTitles: string[]; caseIds: strin
     glossaryTerms: ["Business Process", "Business Intelligence"]
   },
   m2: {
-    visualTitles: ["Information System Structure", "Strategic, Managerial, and Operational Levels", "Management Information Systems", "ERP", "Decision Support Systems", "Information System Challenges"],
+    visualTitles: ["Information System Structure", "Strategic, Managerial, and Operational Levels", "Management Information Systems", "ERP", "Porter's Value Chain", "Business Processes and Functions", "Cross-Functional Process Flow", "Information Partnerships", "Decision Support Systems", "Information System Challenges"],
     caseIds: ["case-retail"],
-    glossaryTerms: ["Transaction Processing System (TPS)", "Management Information System (MIS)", "Decision Support System (DSS)", "Enterprise Resource Planning (ERP)"]
+    glossaryTerms: ["Business Process", "Value Chain", "Business Function", "Workflow", "Transaction Processing System (TPS)", "Management Information System (MIS)", "Decision Support System (DSS)", "Enterprise Resource Planning (ERP)"]
   },
   m3: {
-    visualTitles: ["Business Analysis vs Business Analytics", "Business Analysis Knowledge Areas", "Business Analyst Skills", "Business Analytics", "BI vs Data Science", "Analytics Spectrum", "Analytics Maturity Spectrum", "Analytics Evolution", "NoSQL"],
+    visualTitles: ["Business Analysis vs Business Analytics", "Business Analysis Knowledge Areas", "Business Analyst Skills", "Business Analytics", "BI vs Data Science", "Analytics Spectrum", "Analytics Maturity Spectrum", "Analytics Evolution", "Database Data Representations"],
     caseIds: ["case-retail"],
-    glossaryTerms: ["Business Intelligence (BI)", "Business Analytics", "Dashboard", "Key Performance Indicator (KPI)", "MapReduce"]
+    glossaryTerms: ["Business Intelligence (BI)", "Business Analytics", "Dashboard", "Key Performance Indicator (KPI)", "Database Data Representation"]
   },
   m4: {
     visualTitles: ["Data Warehouse Framework", "BI Architecture", "ETL Process", "Taxonomy of Data", "Data Concept"],
@@ -174,7 +222,7 @@ const moduleResourceMap: Record<string, { visualTitles: string[]; caseIds: strin
     glossaryTerms: ["Decision Table", "Decision Tree", "Decision Analysis"]
   },
   m9: {
-    visualTitles: ["Decision Model Categories", "Analytics Maturity Spectrum", "Decision Modelling in PA and BA", "Decision Requirements Diagram"],
+    visualTitles: ["Decision Model Categories", "AHP Decision Hierarchy", "Analytics Maturity Spectrum", "Decision Modelling in PA and BA", "Decision Requirements Diagram"],
     caseIds: ["case-cloud"],
     glossaryTerms: ["Consistency Ratio (CR)", "Decision Analysis", "Decision Support System (DSS)"]
   },
@@ -182,7 +230,7 @@ const moduleResourceMap: Record<string, { visualTitles: string[]; caseIds: strin
 
 const decisionModellingModuleIds = new Set(["m7", "m8", "m9"]);
 const decisionModellingGroupTitle = "Decision Modelling and Analysis";
-const decisionModellingGroupSubtitle = "Decision analysis, rules, trees, DRDs, and multi-criteria AHP decisions";
+const decisionModellingGroupSubtitle = "Decision analysis, rules, trees, DRDs, optimization, simulation, and model categories";
 
 function getDisplayModuleTitle(module: CourseModule) {
   return decisionModellingModuleIds.has(module.id) ? decisionModellingGroupTitle : module.title;
@@ -193,6 +241,7 @@ const lessonAnchorVisualTitles: Record<string, string> = {
   "l1-2": "Business System Flows",
   "l2-1": "Strategic, Managerial, and Operational Levels",
   "l2-2": "ERP",
+  "l2-3": "Porter's Value Chain",
   "l3-1": "Business Analysis vs Business Analytics",
   "l3-2": "Analytics Maturity Spectrum",
   "l4-1": "Data Warehouse Framework",
@@ -200,7 +249,39 @@ const lessonAnchorVisualTitles: Record<string, string> = {
   "l5-1": "OLAP Cube Slicing",
   "l7-1": "Decision-Making Process",
   "l8-1": "Decision Table",
-  "l9-1": "Decision Modelling in PA and BA"
+  "l9-1": "Decision Model Categories"
+};
+
+const lessonVisualTitles: Record<string, string[]> = {
+  "l1-1": ["Business System", "Data Concept"],
+  "l1-2": ["Business System Flows", "Data Concept"],
+  "l2-1": ["Information System Structure", "Strategic, Managerial, and Operational Levels", "Management Information Systems", "Decision Support Systems"],
+  "l2-2": ["ERP", "Management Information Systems", "Information System Challenges"],
+  "l2-3": ["Porter's Value Chain", "Business Processes and Functions", "Cross-Functional Process Flow", "Information Partnerships"],
+  "l3-1": ["Business Analysis vs Business Analytics", "Business Analysis Knowledge Areas", "Business Analyst Skills", "BI vs Data Science"],
+  "l3-2": ["Analytics Maturity Spectrum", "Analytics Spectrum", "Analytics Evolution", "Business Analytics", "Database Data Representations"],
+  "l4-1": ["Data Warehouse Framework", "BI Architecture", "Taxonomy of Data", "Data Concept"],
+  "l4-2": ["ETL Process", "Data Warehouse Framework", "BI Architecture"],
+  "l5-1": ["OLAP Cube Slicing", "BI Architecture", "Business Analytics"],
+  "l7-1": ["Decision-Making Process", "Decision Types", "Decision Support Systems", "Decision Tree"],
+  "l8-1": ["Decision Table", "Decision Tree", "Decision Requirements Diagram"],
+  "l9-1": ["Decision Model Categories", "AHP Decision Hierarchy", "Decision Modelling in PA and BA", "Decision Requirements Diagram", "Analytics Maturity Spectrum"],
+};
+
+const lessonCaseIds: Record<string, string[]> = {
+  "l1-1": ["case-adaptive-grocery"],
+  "l1-2": ["case-warehouse-flow"],
+  "l2-1": ["case-hospital-systems"],
+  "l2-2": ["case-furniture-erp"],
+  "l2-3": ["case-order-to-cash"],
+  "l3-1": ["case-subscription-roles"],
+  "l3-2": ["case-airline-maturity"],
+  "l4-1": ["case-fashion-warehouse"],
+  "l4-2": ["case-pharmacy-etl"],
+  "l5-1": ["case-supermarket-olap"],
+  "l7-1": ["case-fleet-decision"],
+  "l8-1": ["case-returns-rules"],
+  "l9-1": ["case-model-portfolio"],
 };
 
 function getLessonAnchorVisual(lesson: Lesson, module: CourseModule) {
@@ -215,19 +296,32 @@ export default function App() {
   const [selectedModule, setSelectedModule] = useState<CourseModule | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [selectedLabId, setSelectedLabId] = useState<string | null>(null);
+  const contentBodyRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToPageTop = (behavior: ScrollBehavior = 'auto') => {
+    requestAnimationFrame(() => {
+      contentBodyRef.current?.scrollTo({ top: 0, behavior });
+      window.scrollTo({ top: 0, behavior });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+  };
+
+  const navigateToPage = (page: string) => {
+    setActivePage(page);
+    scrollToPageTop();
+  };
+
   const handleLessonSelect = (lesson: Lesson, module: CourseModule) => {
     setSelectedModule(module);
     setSelectedLesson(lesson);
-    setActivePage('lesson');
-    requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    navigateToPage('lesson');
   };
   const goHome = () => {
-    setActivePage('home');
     setSelectedModule(null);
     setSelectedLesson(null);
     setSelectedLabId(null);
+    navigateToPage('home');
   };
 
   return (
@@ -246,10 +340,10 @@ export default function App() {
           </button>
 
           <nav className="sidebar-menu">
-            <a className={`sidebar-link ${['study', 'lesson'].includes(activePage) ? 'active' : ''}`} onClick={() => { setActivePage('study'); setSelectedModule(null); setSelectedLesson(null); }}>
+            <a className={`sidebar-link ${['study', 'lesson'].includes(activePage) ? 'active' : ''}`} onClick={() => { setSelectedModule(null); setSelectedLesson(null); navigateToPage('study'); }}>
               <BookOpen size={18} /> Learning Path
             </a>
-            <a className={`sidebar-link ${activePage === 'labs' ? 'active' : ''}`} onClick={() => { setActivePage('labs'); setSelectedLabId(null); }}>
+            <a className={`sidebar-link ${activePage === 'labs' ? 'active' : ''}`} onClick={() => { setSelectedLabId(null); navigateToPage('labs'); }}>
               <Sliders size={18} /> Applied Labs
             </a>
           </nav>
@@ -269,16 +363,16 @@ export default function App() {
               <p className="page-subtitle">
                 {activePage === 'study' && 'Start with a lesson. Each one contains explanations, visuals, concepts, applications, and a connected case study.'}
                 {activePage === 'lesson' && 'Active study view.'}
-                {activePage === 'labs' && 'Practise data warehouse design, multidimensional cube exploration, and decision logic modelling in live simulations.'}
+                {activePage === 'labs' && 'Practise data warehouse design, multidimensional cube exploration, business process mapping, and decision logic modelling in live simulations.'}
               </p>
             </div>
           </header>
         )}
 
-        <div className="content-body">
-          {activePage === 'home' && renderHomePage(setActivePage)}
+        <div className="content-body" ref={contentBodyRef}>
+          {activePage === 'home' && renderHomePage(navigateToPage)}
           {activePage === 'study' && renderStudyPage(handleLessonSelect)}
-          {activePage === 'lesson' && selectedLesson && selectedModule && renderLessonPage(selectedLesson, selectedModule, handleLessonSelect, () => setActivePage('study'))}
+          {activePage === 'lesson' && selectedLesson && selectedModule && renderLessonPage(selectedLesson, selectedModule, handleLessonSelect, () => navigateToPage('study'))}
           {activePage === 'labs' && renderLabsPage(selectedLabId, setSelectedLabId)}
         </div>
       </main>
@@ -522,6 +616,9 @@ function renderIntegratedModulePage(
                 <div>
                   <strong>{visual.title}</strong>
                   <p>{visual.concepts}</p>
+                  {visualExplanations[visual.title] && (
+                    <p className="visual-explanation">{visualExplanations[visual.title]}</p>
+                  )}
                 </div>
               </article>
             ))}
@@ -580,10 +677,11 @@ function renderIntegratedModulePage(
 }
 
 function renderInlineText(text: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  const parts = text.split(/(\*\*.+?\*\*)/g);
   return parts.map((part, idx) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={idx}>{part.slice(2, -2)}</strong>;
+    const boldMatch = part.match(/^\*\*(.+)\*\*$/);
+    if (boldMatch) {
+      return <strong key={idx}>{boldMatch[1]}</strong>;
     }
     return <React.Fragment key={idx}>{part}</React.Fragment>;
   });
@@ -635,8 +733,11 @@ function getModuleVisuals(module: CourseModule) {
   return sourceVisualConcepts.filter(visual => resources.visualTitles.includes(visual.title));
 }
 
-function renderLessonVisualConcepts(module: CourseModule) {
-  const visuals = getModuleVisuals(module);
+function renderLessonVisualConcepts(lesson: Lesson, module: CourseModule) {
+  const visualTitles = lessonVisualTitles[lesson.id];
+  const visuals = visualTitles
+    ? sourceVisualConcepts.filter(visual => visualTitles.includes(visual.title))
+    : getModuleVisuals(module);
   if (visuals.length === 0) return null;
 
   return (
@@ -651,8 +752,13 @@ function renderLessonVisualConcepts(module: CourseModule) {
             <div>
               <strong>{visual.title}</strong>
               <p>{visual.concepts}</p>
+              {visualExplanations[visual.title] && (
+                <p className="visual-explanation">{visualExplanations[visual.title]}</p>
+              )}
             </div>
-            <img src={visual.image} alt={visual.title} />
+            <figure className={`lesson-visual-image-frame ${["Database Data Representations", "Decision Modelling in PA and BA"].includes(visual.title) ? "compact-visual" : ""} ${visual.title === "Cross-Functional Process Flow" ? "medium-visual" : ""} ${visual.title === "Porter's Value Chain" ? "large-visual" : ""}`}>
+              <img src={visual.image} alt={visual.title} />
+            </figure>
           </article>
         ))}
       </div>
@@ -660,9 +766,10 @@ function renderLessonVisualConcepts(module: CourseModule) {
   );
 }
 
-function renderLessonCaseStudy(module: CourseModule) {
+function renderLessonCaseStudy(lesson: Lesson, module: CourseModule) {
   const resources = moduleResourceMap[module.id];
-  const cases = caseStudies.filter(item => resources.caseIds.includes(item.id));
+  const caseIds = lessonCaseIds[lesson.id] ?? resources.caseIds;
+  const cases = caseStudies.filter(item => caseIds.includes(item.id));
   if (cases.length === 0) return null;
 
   return (
@@ -736,41 +843,30 @@ function renderLessonPage(
           {renderFormattedExplanation(lesson.explanation)}
         </div>
 
-        {renderLessonVisualConcepts(module)}
+        {renderLessonVisualConcepts(lesson, module)}
 
-        <div className="lesson-section lesson-two-column">
-          <div>
-            <h4>Key Concepts</h4>
-            <ul className="lesson-simple-list">
-              {lesson.keyConcepts.map((concept, idx) => (
-                <li key={idx}>{renderInlineText(concept)}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4>Module Context</h4>
-            <p>{module.description}</p>
-            <ul className="lesson-simple-list compact">
-              {module.keyConcepts.map((concept, idx) => (
-                <li key={idx}>{concept}</li>
-              ))}
-            </ul>
-          </div>
+        <div className="lesson-section">
+          <h4>Key Concepts</h4>
+          <ul className="lesson-simple-list">
+            {lesson.keyConcepts.map((concept, idx) => (
+              <li key={idx}>{renderInlineText(concept)}</li>
+            ))}
+          </ul>
         </div>
 
         <div className="lesson-section">
           <h4><Briefcase size={18} /> Business Application</h4>
-          <p>{lesson.example}</p>
+          <p>{renderInlineText(lesson.example)}</p>
         </div>
 
-        {renderLessonCaseStudy(module)}
+        {renderLessonCaseStudy(lesson, module)}
 
         <div className="lesson-section lesson-two-column">
           <div>
             <h4><AlertTriangle size={18} /> Common Mistakes</h4>
             <ul className="lesson-simple-list">
             {lesson.commonMistakes.map((mistake, idx) => (
-              <li key={idx}>{mistake}</li>
+              <li key={idx}>{renderInlineText(mistake)}</li>
             ))}
             </ul>
           </div>
@@ -778,7 +874,7 @@ function renderLessonPage(
             <h4>Key Takeaways</h4>
             <ul className="lesson-simple-list">
             {lesson.summary.map((takeaway, idx) => (
-              <li key={idx}>{takeaway}</li>
+              <li key={idx}>{renderInlineText(takeaway)}</li>
             ))}
             </ul>
           </div>
@@ -918,6 +1014,14 @@ function renderLabsPage(
       skills: ["dimensional thinking", "aggregation", "drill analysis"]
     },
     {
+      id: "process",
+      title: "Business Process Handoff Lab",
+      level: "Intermediate",
+      desc: "Map an order-to-cash process across business functions, diagnose handoff risk, and choose information-system support for the weak points.",
+      scenario: "Business analyst redesigning a cross-functional customer order process.",
+      skills: ["process mapping", "handoff analysis", "workflow design"]
+    },
+    {
       id: "decision-table",
       title: "Decision Rule Governance Lab",
       level: "Advanced",
@@ -948,6 +1052,9 @@ function renderLabsPage(
   }
   if (selectedLabId === 'olap') {
     return <OLAPExplorerLab onBack={() => setSelectedLabId(null)} onComplete={() => undefined} isCompleted={false} />;
+  }
+  if (selectedLabId === 'process') {
+    return <BusinessProcessLab onBack={() => setSelectedLabId(null)} onComplete={() => undefined} isCompleted={false} />;
   }
   if (selectedLabId === 'decision-table') {
     return <DecisionTableLab onBack={() => setSelectedLabId(null)} onComplete={() => undefined} isCompleted={false} />;
@@ -1021,6 +1128,20 @@ function renderLabIcon(type: string) {
     );
   }
 
+  if (type === 'process') {
+    return (
+      <svg viewBox="0 0 96 96" aria-hidden="true">
+        <rect x="10" y="18" width="20" height="14" rx="4" />
+        <rect x="38" y="18" width="20" height="14" rx="4" />
+        <rect x="66" y="18" width="20" height="14" rx="4" />
+        <rect x="22" y="60" width="20" height="14" rx="4" />
+        <rect x="54" y="60" width="20" height="14" rx="4" />
+        <path d="M30 25h8M58 25h8M76 32v12c0 6-5 10-11 10H42M22 32v12c0 6 5 10 11 10h21M42 67h12" />
+        <circle cx="48" cy="48" r="7" />
+      </svg>
+    );
+  }
+
   if (type === 'decision-table') {
     return (
       <svg viewBox="0 0 96 96" aria-hidden="true">
@@ -1057,7 +1178,7 @@ function renderLabIcon(type: string) {
 }
 
 function renderLabBrief(
-  level: "Intermediate" | "Advanced",
+  _level: "Intermediate" | "Advanced",
   title: string,
   scenario: string,
   analystTask: string,
@@ -1066,7 +1187,6 @@ function renderLabBrief(
   return (
     <div className="lab-brief">
       <div>
-        <span className={`badge ${level === 'Advanced' ? 'badge-orange' : 'badge-blue'}`}>{level}</span>
         <h3>{title}</h3>
         <p>{scenario}</p>
       </div>
@@ -1421,7 +1541,7 @@ function renderProgressPage(progress: any, resetProgress: () => void) {
           <span style={{ fontSize: '2rem' }}>🧪</span>
           <h4 style={{ color: 'var(--navy)', fontWeight: 700, margin: '8px 0' }}>Finished Labs</h4>
           <p style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--teal)' }}>{completedLabsCount}</p>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>out of 5 dynamic labs</p>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>out of 6 dynamic labs</p>
         </div>
 
         <div className="glass-card" style={{ textAlign: 'center' }}>
@@ -1809,7 +1929,6 @@ function ETLSimulatorLab({ onBack, onComplete, isCompleted: _isCompleted }: { on
 
       <div className="lab-brief">
         <div>
-          <span className="badge badge-blue">Intermediate</span>
           <h3>ETL Quality Engineering Lab</h3>
           <p>
             You are preparing a nightly retail sales load where duplicate rows, missing customer entities, and mixed currencies would corrupt executive reporting.
@@ -2184,7 +2303,182 @@ function OLAPExplorerLab({ onBack, onComplete, isCompleted: _isCompleted }: { on
   );
 }
 
-// C. DECISION TABLE BUILDER LAB COMPONENT
+// C. BUSINESS PROCESS HANDOFF LAB COMPONENT
+function BusinessProcessLab({ onBack, onComplete, isCompleted: _isCompleted }: { onBack: () => void, onComplete: () => void, isCompleted: boolean }) {
+  const [selectedStep, setSelectedStep] = useState<number>(0);
+  const [systemMode, setSystemMode] = useState<'Silos' | 'Workflow ERP'>('Silos');
+  const [handoffFocus, setHandoffFocus] = useState<'Speed' | 'Quality' | 'Visibility'>('Visibility');
+
+  const processSteps = [
+    { name: "Proposal", function: "Sales", baseDays: 2, risk: "Medium", system: "CRM", issue: "Customer requirements are captured, but production capacity is not yet visible." },
+    { name: "Commitment", function: "Sales + Finance", baseDays: 3, risk: "High", system: "Workflow approval", issue: "A delivery promise is made before credit and resource checks are fully coordinated." },
+    { name: "Configuration", function: "Manufacturing", baseDays: 4, risk: "Medium", system: "ERP product configuration", issue: "Product options must be translated into materials, capacity, and production instructions." },
+    { name: "Credit Checking", function: "Finance", baseDays: 2, risk: "High", system: "Credit rules / DSS", issue: "Manual credit checks can delay approved orders or let risky commitments move too far." },
+    { name: "Delivery", function: "Logistics", baseDays: 3, risk: "Medium", system: "Logistics module", issue: "Shipment planning depends on accurate completion dates from manufacturing." },
+    { name: "Billing", function: "Finance", baseDays: 2, risk: "Low", system: "ERP invoicing", issue: "Invoices should be triggered by confirmed delivery instead of manual notification." },
+    { name: "Collections", function: "Finance", baseDays: 5, risk: "Medium", system: "Receivables dashboard", issue: "Payment follow-up needs status visibility across account history and invoice age." },
+  ];
+
+  const activeStep = processSteps[selectedStep];
+  const riskPenalty = activeStep.risk === 'High' ? 2 : activeStep.risk === 'Medium' ? 1 : 0;
+  const modeImprovement = systemMode === 'Workflow ERP' ? 0.72 : 1;
+  const focusImprovement = handoffFocus === 'Speed' ? 0.9 : handoffFocus === 'Quality' ? 0.95 : 0.86;
+  const totalBaseDays = processSteps.reduce((sum, step) => sum + step.baseDays, 0);
+  const redesignedDays = Math.round(totalBaseDays * modeImprovement * focusImprovement);
+  const visibilityScore = systemMode === 'Workflow ERP' ? (handoffFocus === 'Visibility' ? 92 : 78) : (handoffFocus === 'Visibility' ? 58 : 42);
+  const handoffRisk = Math.max(0, Math.round((riskPenalty + (systemMode === 'Silos' ? 3 : 1)) * (handoffFocus === 'Quality' ? 12 : 16)));
+  const functionLoad = processSteps.reduce((acc, step) => {
+    acc[step.function] = (acc[step.function] || 0) + step.baseDays;
+    return acc;
+  }, {} as Record<string, number>);
+
+  return (
+    <div style={{ animation: 'slideIn 0.3s ease-out' }}>
+      <button className="btn btn-secondary" style={{ marginBottom: '20px', padding: '6px 12px', fontSize: '0.8rem' }} onClick={onBack}>
+        ← Back to Labs
+      </button>
+
+      {renderLabBrief(
+        "Intermediate",
+        "Business Process Handoff Lab",
+        "A B2B supplier wants to redesign order-to-cash work that crosses Sales, Manufacturing, Finance, and Logistics.",
+        "Inspect the process steps, locate weak handoffs, and choose information-system support that improves speed, quality, and visibility.",
+        ["process mapping", "handoff diagnosis", "workflow support"]
+      )}
+
+      {renderIndustryCaseFile(
+        "Industrial Equipment Sales",
+        "Customers experience one order process, but internally the work moves across departments: proposal, commitment, configuration, credit checking, delivery, billing, and collections.",
+        "The current process is functionally organized. Each department completes its own task, but status is hard to see, promises are made before checks are complete, and delays accumulate at handoffs.",
+        ["Sales manager: reliable commitments", "Finance controller: credit and billing control", "Logistics planner: delivery visibility"],
+        "A redesigned process map with identified handoff risks and recommended CRM, ERP, workflow, credit-rule, and dashboard support."
+      )}
+
+      <div className="lab-layout">
+        <div className="lab-sidebar">
+          <h4 style={{ color: 'var(--navy)', fontWeight: 700, fontSize: '1.05rem' }}>Redesign Controls</h4>
+
+          <div className="form-group">
+            <label className="form-label">Information System Mode</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {(["Silos", "Workflow ERP"] as const).map(mode => (
+                <button key={mode} className={`btn ${systemMode === mode ? 'btn-primary' : 'btn-secondary'}`} style={{ flexGrow: 1, padding: '8px', fontSize: '0.75rem' }} onClick={() => { setSystemMode(mode); onComplete(); }}>
+                  {mode}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Improvement Focus</label>
+            <select className="form-select" value={handoffFocus} onChange={(e) => { setHandoffFocus(e.target.value as 'Speed' | 'Quality' | 'Visibility'); onComplete(); }}>
+              <option value="Visibility">Visibility</option>
+              <option value="Speed">Speed</option>
+              <option value="Quality">Quality</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Inspect Process Step</label>
+            <select className="form-select" value={selectedStep} onChange={(e) => { setSelectedStep(parseInt(e.target.value)); onComplete(); }}>
+              {processSteps.map((step, idx) => (
+                <option key={step.name} value={idx}>{idx + 1}. {step.name}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="lab-canvas">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
+            <h4 style={{ color: 'var(--navy)', fontWeight: 700, fontSize: '1.15rem' }}>Order-to-Cash Process Map</h4>
+            <span className={`badge ${activeStep.risk === 'High' ? 'badge-orange' : activeStep.risk === 'Medium' ? 'badge-violet' : 'badge-green'}`}>
+              Selected risk: {activeStep.risk}
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(128px, 1fr))', gap: '10px', marginBottom: '18px' }}>
+            {processSteps.map((step, idx) => (
+              <button
+                key={step.name}
+                type="button"
+                onClick={() => { setSelectedStep(idx); onComplete(); }}
+                style={{
+                  border: idx === selectedStep ? '2px solid var(--teal)' : '1px solid var(--border-light)',
+                  background: idx === selectedStep ? 'rgba(45,212,191,0.08)' : 'var(--bg-base)',
+                  color: 'var(--text-primary)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '12px',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  minHeight: '102px'
+                }}
+              >
+                <strong style={{ display: 'block', color: 'var(--navy)', fontSize: '0.82rem' }}>{step.name}</strong>
+                <span style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.72rem', marginTop: '4px' }}>{step.function}</span>
+                <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.72rem', marginTop: '8px' }}>{step.baseDays} days baseline</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="advanced-metric-grid">
+            <div>
+              <span>Baseline Cycle</span>
+              <strong>{totalBaseDays} days</strong>
+            </div>
+            <div>
+              <span>Redesigned Cycle</span>
+              <strong>{redesignedDays} days</strong>
+            </div>
+            <div>
+              <span>Visibility Score</span>
+              <strong>{visibilityScore}%</strong>
+            </div>
+            <div>
+              <span>Handoff Risk</span>
+              <strong>{handoffRisk}%</strong>
+            </div>
+          </div>
+
+          <div className="lab-insight-panel">
+            <h5>{activeStep.name}: {activeStep.system}</h5>
+            <p>
+              {activeStep.issue} In <strong>{systemMode}</strong> mode with a <strong>{handoffFocus.toLowerCase()}</strong> focus, the redesign should prioritize shared status, clear ownership, and automated triggers between functions.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '16px' }}>
+            <div style={{ background: 'var(--bg-base)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-sm)', padding: '14px' }}>
+              <h5 style={{ color: 'var(--navy)', fontWeight: 700, marginBottom: '10px' }}>Functional Workload</h5>
+              {Object.entries(functionLoad).map(([fn, days]) => (
+                <div key={fn} style={{ marginBottom: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                    <span>{fn}</span>
+                    <strong>{days} days</strong>
+                  </div>
+                  <div className="progress-summary-fill" style={{ width: '100%' }}>
+                    <div className="progress-summary-fill-inner" style={{ width: `${Math.round((days / totalBaseDays) * 100)}%` }}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: 'var(--bg-base)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-sm)', padding: '14px' }}>
+              <h5 style={{ color: 'var(--navy)', fontWeight: 700, marginBottom: '10px' }}>Recommended System Support</h5>
+              <ul className="lesson-simple-list compact">
+                <li>CRM captures demand and proposal context.</li>
+                <li>ERP links configuration, delivery, billing, and inventory data.</li>
+                <li>Workflow routes commitments and credit checks before promises are finalized.</li>
+                <li>Dashboards expose order status and aging collections.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// D. DECISION TABLE BUILDER LAB COMPONENT
 function DecisionTableLab({ onBack, onComplete, isCompleted: _isCompleted }: { onBack: () => void, onComplete: () => void, isCompleted: boolean }) {
   const [customerType, setCustomerType] = useState<'Premium' | 'Regular'>('Premium');
   const [orderValue, setOrderValue] = useState<number>(3000);

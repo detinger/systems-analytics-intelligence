@@ -70,8 +70,8 @@ const chartTooltipCursor = {
 
 const visualAssets = {
   splash: new URL('../../pictures/splash.png', import.meta.url).href,
-  businessSystem: new URL('../../pictures/poslovni_sustav.png', import.meta.url).href,
-  businessSystemFlows: new URL('../../pictures/poslovni_sustav_tokovi.png', import.meta.url).href,
+  businessSystem: new URL('../../pictures/business_system.png', import.meta.url).href,
+  businessSystemFlows: new URL('../../pictures/business_system_flows.png', import.meta.url).href,
   systemsPyramid: new URL('../../pictures/info-sustav.png', import.meta.url).href,
   managementLevels: new URL('../../pictures/level-smo.png', import.meta.url).href,
   challenges: new URL('../../pictures/challanges.png', import.meta.url).href,
@@ -91,7 +91,7 @@ const visualAssets = {
   baSkills: new URL('../../pictures/BA-skills.png', import.meta.url).href,
   olapCube: new URL('../../pictures/data-cube-slicing.png', import.meta.url).href,
   biVsDataScience: new URL('../../pictures/BI_vs_DataScience.png', import.meta.url).href,
-  nosql: new URL('../../pictures/nosql.png', import.meta.url).href,
+  database: new URL('../../pictures/database.png', import.meta.url).href,
   etlPipeline: new URL('../../pictures/ETL-process.png', import.meta.url).href,
   analyticsSpectrum: new URL('../../pictures/analytics_spectrum.png', import.meta.url).href,
   analyticsMaturity: new URL('../../pictures/analytics-maturity.png', import.meta.url).href,
@@ -133,7 +133,7 @@ const sourceVisualConcepts = [
   { title: "Business Analyst Skills", category: "Analytics and BI", image: visualAssets.baSkills, concepts: "Analytical, communication, domain, technical, and stakeholder skills." },
   { title: "OLAP Cube Slicing", category: "Analytics and BI", image: visualAssets.olapCube, concepts: "Multidimensional analysis, slice, dice, pivot, drill-down." },
   { title: "BI vs Data Science", category: "Analytics and BI", image: visualAssets.biVsDataScience, concepts: "Operational reporting and monitoring versus advanced modelling and experimentation." },
-  { title: "Database Data Representations", category: "Analytics and BI", image: visualAssets.nosql, concepts: "Different ways databases represent data: key-value, graph, column-family, and document models." },
+  { title: "Database Data Representations", category: "Analytics and BI", image: visualAssets.database, concepts: "Different ways databases represent data: key-value, graph, column-family, and document models." },
   { title: "ETL Process", category: "Analytics and BI", image: visualAssets.etlPipeline, concepts: "Extract, clean, transform, load, and prepare warehouse-ready data." },
   { title: "Analytics Spectrum", category: "Decision Modelling", image: visualAssets.analyticsSpectrum, concepts: "Descriptive, diagnostic, predictive, and prescriptive analytics." },
   { title: "Analytics Maturity Spectrum", category: "Decision Modelling", image: visualAssets.analyticsMaturity, concepts: "Business value and difficulty as analytics moves toward optimization." },

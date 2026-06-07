@@ -1060,14 +1060,13 @@ body::before {
 
 .home-splash-visual {
   width: 100%;
-  overflow-x: auto;
+  overflow: hidden;
   border: 1px solid var(--border-light);
   background: #020b18;
 }
 
 .splash-map-canvas {
   width: 100%;
-  min-width: 760px;
   position: relative;
   isolation: isolate;
 }
@@ -1358,10 +1357,6 @@ body::before {
 
   .splash-map-heading p {
     text-align: left;
-  }
-
-  .splash-map-canvas {
-    min-width: 820px;
   }
 
   .splash-glossary-index {

@@ -7,6 +7,96 @@ export type GlossaryTerm = {
 
 export const glossaryData: GlossaryTerm[] = [
   {
+    term: "Raw Data",
+    croatian: "Sirovi podaci",
+    definition: "Unprocessed facts captured from transactions, operations, customers, employees, products, financial activity, markets, and external sources.",
+    category: "Analytics & BI"
+  },
+  {
+    term: "People",
+    croatian: "Ljudi",
+    definition: "The users, managers, analysts, specialists, and stakeholders who create, operate, govern, interpret, and act on information.",
+    category: "Business Systems"
+  },
+  {
+    term: "Process",
+    croatian: "Proces",
+    definition: "A repeatable set of connected activities that transforms inputs into a defined business result.",
+    category: "Business Systems"
+  },
+  {
+    term: "Data",
+    croatian: "Podaci",
+    definition: "Recorded facts or observations that gain business meaning when they are organized, interpreted, and placed in context.",
+    category: "Analytics & BI"
+  },
+  {
+    term: "Technology",
+    croatian: "Tehnologija",
+    definition: "The hardware, software, networks, platforms, and technical services used to capture, process, store, protect, and communicate information.",
+    category: "Business Systems"
+  },
+  {
+    term: "Planning",
+    croatian: "Planiranje",
+    definition: "Defining objectives, priorities, resources, actions, and expected results before work is performed.",
+    category: "Business Systems"
+  },
+  {
+    term: "Organizing",
+    croatian: "Organiziranje",
+    definition: "Arranging people, responsibilities, resources, and workflows so that plans can be executed effectively.",
+    category: "Business Systems"
+  },
+  {
+    term: "Directing",
+    croatian: "Usmjeravanje",
+    definition: "Guiding, coordinating, and motivating people while communicating decisions and operational priorities.",
+    category: "Business Systems"
+  },
+  {
+    term: "Controlling",
+    croatian: "Kontroliranje",
+    definition: "Comparing actual performance with plans and taking corrective action when results differ from expectations.",
+    category: "Business Systems"
+  },
+  {
+    term: "Strategic Management",
+    croatian: "Stratesko upravljanje",
+    definition: "Long-term management concerned with direction, competitive position, value creation, major investments, and uncertain nonrecurring decisions.",
+    category: "Decision Support"
+  },
+  {
+    term: "Managerial Management",
+    croatian: "Takticko upravljanje",
+    definition: "Medium-term management that converts strategy into plans, allocates resources, and monitors performance through semi-structured decisions.",
+    category: "Decision Support"
+  },
+  {
+    term: "Operational Management",
+    croatian: "Operativno upravljanje",
+    definition: "Short-term management focused on recurring work, efficient execution, quality control, and structured daily decisions.",
+    category: "Business Systems"
+  },
+  {
+    term: "Unstructured Decision",
+    croatian: "Nestrukturirana odluka",
+    definition: "A novel or complex decision with no complete predefined procedure, requiring judgement, interpretation, and consideration of uncertainty.",
+    category: "Decision Support"
+  },
+  {
+    term: "Semi-structured Decision",
+    croatian: "Polustrukturirana odluka",
+    definition: "A decision with some defined rules or analytical steps but also a significant need for managerial judgement.",
+    category: "Decision Support"
+  },
+  {
+    term: "Structured Decision",
+    croatian: "Strukturirana odluka",
+    definition: "A routine and repeatable decision governed by clear inputs, rules, procedures, and expected outcomes.",
+    category: "Decision Support"
+  },
+  {
     term: "Business Process",
     croatian: "Poslovni proces",
     definition: "A structured, sequence of tasks or activities that an organization performs to produce a specific service or product for customers.",
@@ -53,6 +143,48 @@ export const glossaryData: GlossaryTerm[] = [
     croatian: "Sustav za planiranje resursa poduzeća",
     definition: "A suite of integrated software modules and a common database that links an organization's core business processes (sales, finance, HR, production) into one cohesive flow.",
     category: "Business Systems"
+  },
+  {
+    term: "Executive Information System (EIS)",
+    croatian: "Izvrsni informacijski sustav",
+    definition: "A high-level information system that gives executives concise access to strategic indicators, trends, exceptions, and external intelligence.",
+    category: "Business Systems"
+  },
+  {
+    term: "Information System",
+    croatian: "Informacijski sustav",
+    definition: "An organized combination of people, processes, data, and technology that collects, transforms, stores, and distributes information.",
+    category: "Business Systems"
+  },
+  {
+    term: "Information Value Chain",
+    croatian: "Lanac vrijednosti informacija",
+    definition: "The progression from collecting raw data through processing, informing, analyzing, deciding, acting, and measuring results.",
+    category: "Analytics & BI"
+  },
+  {
+    term: "Business Value Chain",
+    croatian: "Poslovni lanac vrijednosti",
+    definition: "The linked primary and support activities through which an organization transforms resources into customer value and competitive advantage.",
+    category: "Business Systems"
+  },
+  {
+    term: "Primary Activities",
+    croatian: "Primarne aktivnosti",
+    definition: "Value-chain activities directly involved in receiving inputs, producing, delivering, marketing, selling, and servicing an offering.",
+    category: "Business Systems"
+  },
+  {
+    term: "Support Activities",
+    croatian: "Potporne aktivnosti",
+    definition: "Activities such as infrastructure, human resources, technology development, and procurement that enable primary activities.",
+    category: "Business Systems"
+  },
+  {
+    term: "Better Decisions and Results",
+    croatian: "Bolje odluke i rezultati",
+    definition: "The business outcome of using reliable information to improve performance, drive efficiency, create value, and manage risk.",
+    category: "Decision Support"
   },
   {
     term: "Data Warehouse",

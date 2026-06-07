@@ -25,6 +25,7 @@ import {
 } from 'recharts';
 import { courseModules, CourseModule, Lesson } from '../content/modules';
 import { caseStudies } from '../content/cases';
+import { glossaryData, GlossaryTerm } from '../content/glossary';
 
 function AppLogoMark() {
   return (
@@ -106,6 +107,44 @@ const visualAssets = {
   processSwimlane: new URL('../../pictures/process3.png', import.meta.url).href,
   processPartnerships: new URL('../../pictures/process4.png', import.meta.url).href,
 };
+
+type SplashHotspot = {
+  term: string;
+  label: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+const splashHotspots: SplashHotspot[] = [
+  { term: "Raw Data", label: "Raw data", x: 1.5, y: 20.5, width: 8.5, height: 27 },
+  { term: "People", label: "People", x: 31.2, y: 4.5, width: 7.3, height: 9 },
+  { term: "Process", label: "Process", x: 38.6, y: 4.5, width: 6.9, height: 9 },
+  { term: "Data", label: "Data", x: 45.6, y: 4.5, width: 6.8, height: 9 },
+  { term: "Technology", label: "Technology", x: 52.4, y: 4.5, width: 8.2, height: 9 },
+  { term: "Planning", label: "Planning", x: 65.3, y: 4.5, width: 14, height: 4.2 },
+  { term: "Organizing", label: "Organizing", x: 65.3, y: 8.8, width: 14, height: 4.2 },
+  { term: "Directing", label: "Directing", x: 65.3, y: 13.1, width: 14, height: 4.2 },
+  { term: "Controlling", label: "Controlling", x: 65.3, y: 17.4, width: 14, height: 4.2 },
+  { term: "Strategic Management", label: "Strategic", x: 32.8, y: 19.5, width: 36.2, height: 13.2 },
+  { term: "Managerial Management", label: "Managerial", x: 29.6, y: 33, width: 41.2, height: 12.7 },
+  { term: "Operational Management", label: "Operational", x: 26.5, y: 46.1, width: 50, height: 12.2 },
+  { term: "Executive Information System (EIS)", label: "EIS", x: 12.2, y: 49.5, width: 11.8, height: 12 },
+  { term: "Decision Support System (DSS)", label: "DSS", x: 9.2, y: 56, width: 10.2, height: 12 },
+  { term: "Transaction Processing System (TPS)", label: "TPS", x: 6.2, y: 62.5, width: 7.6, height: 10.5 },
+  { term: "Unstructured Decision", label: "Unstructured", x: 81.5, y: 35, width: 14.6, height: 6.7 },
+  { term: "Semi-structured Decision", label: "Semi-structured", x: 81.5, y: 42.2, width: 14.6, height: 6.7 },
+  { term: "Structured Decision", label: "Structured", x: 81.5, y: 49.3, width: 14.6, height: 6.7 },
+  { term: "Business Process", label: "Business processes", x: 23.4, y: 61, width: 61, height: 8.3 },
+  { term: "Information Value Chain", label: "Information value chain", x: 23, y: 70.8, width: 49.5, height: 12 },
+  { term: "Support Activities", label: "Support activities", x: 9, y: 85, width: 83, height: 6.3 },
+  { term: "Primary Activities", label: "Primary activities", x: 9, y: 91.1, width: 83, height: 7.5 },
+  { term: "Better Decisions and Results", label: "Better decisions and results", x: 83.2, y: 3, width: 14, height: 25.8 },
+  { term: "Information System", label: "Information system", x: 21.9, y: 32.5, width: 8.2, height: 12 },
+];
+
+const glossaryByTerm = new Map(glossaryData.map(item => [item.term, item]));
 
 const sourceVisualConcepts = [
   { title: "Business System", category: "Business Information Systems", image: visualAssets.businessSystem, concepts: "Adaptive enterprise system, inputs, outputs, control mechanism, feedback." },
@@ -360,7 +399,7 @@ export default function App() {
         )}
 
         <div className="content-body" ref={contentBodyRef}>
-          {activePage === 'home' && renderHomePage(navigateToPage)}
+          {activePage === 'home' && <HomePage setActivePage={navigateToPage} />}
           {activePage === 'study' && renderStudyPage(handleLessonSelect)}
           {activePage === 'lesson' && selectedLesson && selectedModule && renderLessonPage(selectedLesson, selectedModule, handleLessonSelect, () => navigateToPage('study'))}
           {activePage === 'labs' && renderLabsPage(selectedLabId, setSelectedLabId)}
@@ -439,9 +478,32 @@ function renderStudyPage(
 }
 
 // 1. Home Page Renderer
-function renderHomePage(
-  setActivePage: (p: string) => void
-) {
+function HomePage({ setActivePage }: { setActivePage: (page: string) => void }) {
+  const [selectedTerm, setSelectedTerm] = useState<string | null>(null);
+  const [hoveredTerm, setHoveredTerm] = useState<string | null>(null);
+  const activeTerm = hoveredTerm ?? selectedTerm;
+  const activeGlossary = activeTerm ? glossaryByTerm.get(activeTerm) : undefined;
+
+  const selectTerm = (term: string) => {
+    setSelectedTerm(current => current === term ? null : term);
+  };
+
+  const renderGlossaryPopup = (entry: GlossaryTerm) => (
+    <aside className="splash-glossary-popup" id="splash-glossary-popup" aria-live="polite">
+      <button
+        className="splash-glossary-close"
+        type="button"
+        aria-label="Close explanation"
+        onClick={() => setSelectedTerm(null)}
+      >
+        ×
+      </button>
+      <span>{entry.category}</span>
+      <h2>{entry.term}</h2>
+      <p>{entry.definition}</p>
+    </aside>
+  );
+
   return (
     <div className="home-splash">
       <section className="home-splash-panel">
@@ -471,8 +533,65 @@ function renderHomePage(
           </button>
         </div>
 
-        <div className="home-splash-visual">
-          <img src={visualAssets.splash} alt="Information systems, analytics, and intelligence learning map" />
+        <div className="splash-map-section">
+          <div className="splash-map-heading">
+            <div>
+              <span>Interactive visual glossary</span>
+              <h2>Explore the systems map</h2>
+            </div>
+            <p>Hover, focus, or click a highlighted area to examine the concept.</p>
+          </div>
+
+          <div className="home-splash-visual">
+            <div className="splash-map-canvas">
+              <img src={visualAssets.splash} alt="Information systems, analytics, and intelligence learning map" />
+              {splashHotspots.map((hotspot) => {
+                const isActive = activeTerm === hotspot.term;
+                return (
+                  <button
+                    key={hotspot.term}
+                    className={`splash-hotspot ${isActive ? 'active' : ''}`}
+                    type="button"
+                    style={{
+                      left: `${hotspot.x}%`,
+                      top: `${hotspot.y}%`,
+                      width: `${hotspot.width}%`,
+                      height: `${hotspot.height}%`,
+                    }}
+                    aria-label={`Explain ${hotspot.label}`}
+                    aria-expanded={selectedTerm === hotspot.term}
+                    aria-describedby={isActive ? "splash-glossary-popup" : undefined}
+                    onMouseEnter={() => setHoveredTerm(hotspot.term)}
+                    onMouseLeave={() => setHoveredTerm(null)}
+                    onFocus={() => setHoveredTerm(hotspot.term)}
+                    onBlur={() => setHoveredTerm(null)}
+                    onClick={() => selectTerm(hotspot.term)}
+                  >
+                    <span className="splash-hotspot-label">{hotspot.label}</span>
+                  </button>
+                );
+              })}
+              {activeGlossary && renderGlossaryPopup(activeGlossary)}
+            </div>
+          </div>
+
+          <div className="splash-glossary-index" aria-label="Interactive glossary concepts">
+            {splashHotspots.map((hotspot, index) => (
+              <button
+                key={hotspot.term}
+                type="button"
+                className={activeTerm === hotspot.term ? 'active' : ''}
+                onMouseEnter={() => setHoveredTerm(hotspot.term)}
+                onMouseLeave={() => setHoveredTerm(null)}
+                onFocus={() => setHoveredTerm(hotspot.term)}
+                onBlur={() => setHoveredTerm(null)}
+                onClick={() => selectTerm(hotspot.term)}
+              >
+                <span>{index + 1}</span>
+                {hotspot.label}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
     </div>
